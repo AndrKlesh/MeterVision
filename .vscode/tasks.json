@@ -1,0 +1,96 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            // Сборка в Debug
+            "label": "build: Debug",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/backend/api/MeterVision.Api.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            // Сборка в Release
+            "label": "build: Release",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/backend/api/MeterVision.Api.csproj",
+                "-c",
+                "Release",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile",
+            "group": "build"
+        },
+        {
+            // Запуск в Debug (без браузера, порт 5100)
+            "label": "run: Debug",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "run",
+                "--project",
+                "${workspaceFolder}/backend/api/MeterVision.Api.csproj",
+                "-c",
+                "Debug",
+                "--no-build",
+                "--urls",
+                "http://localhost:5100"
+            ],
+            "isBackground": true,
+            "problemMatcher": "$msCompile",
+            "dependsOn": "build: Debug",
+            "options": {
+                "env": {
+                    "ASPNETCORE_ENVIRONMENT": "Development",
+                    "ASPNETCORE_URLS": "http://localhost:5100"
+                }
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        },
+        {
+            // Запуск в Release (без браузера, порт 5100)
+            "label": "run: Release",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "run",
+                "--project",
+                "${workspaceFolder}/backend/api/MeterVision.Api.csproj",
+                "-c",
+                "Release",
+                "--no-build",
+                "--urls",
+                "http://localhost:5100"
+            ],
+            "isBackground": true,
+            "problemMatcher": "$msCompile",
+            "dependsOn": "build: Release",
+            "options": {
+                "env": {
+                    "ASPNETCORE_ENVIRONMENT": "Production",
+                    "ASPNETCORE_URLS": "http://localhost:5100"
+                }
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            }
+        }
+    ]
+}
