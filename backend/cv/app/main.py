@@ -10,11 +10,13 @@ if USE_MOCK:
 else:
     raise RuntimeError("Реальный движок ещё не реализован. Установите USE_MOCK=true")
 
+
 @app.post("/api/ocr", response_model=OCRResponse)
 async def recognize(file: UploadFile = File(...)):
     image_bytes = await file.read()
-    results = engine.recognize(image_bytes)
-    return OCRResponse(results=results)
+    readings = engine.recognize(image_bytes)
+    return OCRResponse(readings=readings)
+
 
 @app.get("/health")
 def health():

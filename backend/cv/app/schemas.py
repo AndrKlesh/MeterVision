@@ -1,4 +1,6 @@
 from pydantic import BaseModel
+from typing import List
+
 
 class BoundingBox(BaseModel):
     x: int
@@ -6,10 +8,13 @@ class BoundingBox(BaseModel):
     width: int
     height: int
 
-class OCRResult(BaseModel):
-    text: str
+
+class MeterReading(BaseModel):
+    serial_number: str
+    reading_value: str
     confidence: float
     bbox: BoundingBox
 
+
 class OCRResponse(BaseModel):
-    results: list[OCRResult]
+    readings: List[MeterReading]
