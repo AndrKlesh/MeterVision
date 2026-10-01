@@ -1,0 +1,6 @@
+@MeterVision.Api_HostAddress = http://localhost:5053
+
+GET {{MeterVision.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
