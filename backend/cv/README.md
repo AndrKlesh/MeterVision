@@ -10,7 +10,7 @@ REST API для распознавания показаний счётчиков
 ## Установка
 
 ```bat
-cd cv-service
+cd cv
 python -m pip install -r requirements.txt
 ```
 
@@ -18,7 +18,7 @@ python -m pip install -r requirements.txt
 
 Вариант 1: двойной клик по `run_mock.bat` (лежит в корне проекта).
 
-Вариант 2: вручную из папки `cv-service`:
+Вариант 2: вручную из папки `cv`:
 
 ```bat
 python -m uvicorn app.main:app --reload
