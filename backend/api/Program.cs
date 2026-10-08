@@ -1,15 +1,17 @@
-using Api.Controllers;
-using Api.Models;
-using Api.Services;
-using Api.Services.Abstractions;
+using MeterVision.Api.Controllers;
+using MeterVision.Api.Models;
+using MeterVision.Api.Services;
+using MeterVision.Api.Services.Abstractions;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddScoped<AuthService, AuthServiceStub>();
+builder.Services.AddScoped<IAuthService, AuthServiceStub>();
+builder.Services.AddScoped<ICvService, CvServiceStub>();
+builder.Services.AddScoped<IAuthService, AuthServiceStub>();
+builder.Services.AddOpenApi();
 
 var app = builder.Build();
 

@@ -1,4 +1,4 @@
-namespace Api.Services.Abstractions;
+namespace MeterVision.Api.Services.Abstractions;
 
 public record AuthResult(
     bool Success, 
@@ -6,7 +6,7 @@ public record AuthResult(
     string? ErrorMessage
 );
 
-public interface AuthService
+public interface IAuthService
 {
     Task<AuthResult> LoginAsync(string Username, string Password);
     Task<bool> LogoutAsync(string token);

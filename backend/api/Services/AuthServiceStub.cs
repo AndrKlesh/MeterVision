@@ -1,8 +1,8 @@
-namespace Api.Services;
+namespace MeterVision.Api.Services;
 
-using Api.Services.Abstractions;
+using MeterVision.Api.Services.Abstractions;
 
-public class AuthServiceStub : AuthService
+public class AuthServiceStub : IAuthService
 {
     private record UserSession(string Username, string token);
     private static readonly List<UserSession> activeSessions = new();

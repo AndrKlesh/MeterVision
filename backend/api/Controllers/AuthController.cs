@@ -1,16 +1,16 @@
-namespace Api.Controllers;
+namespace MeterVision.Api.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
-using Api.Models;
-using Api.Services.Abstractions;
+using MeterVision.Api.Models;
+using MeterVision.Api.Services.Abstractions;
 
 [ApiController]
 [Route("api/auth")]
 public class AuthController : ControllerBase
 {
-    private readonly AuthService _authService;
+    private readonly IAuthService _authService;
 
-    public AuthController(AuthService authService)
+    public AuthController(IAuthService authService)
     {
         _authService = authService;
     }
