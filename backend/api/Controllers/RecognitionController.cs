@@ -24,13 +24,7 @@ public class RecognitionController : ControllerBase
     [HttpPost("upload")]
     public async Task<ActionResult<RecognitionResponse>> UploadPhoto(IFormFile photo)
     {
-        if (photo == null || photo.Length == 0)
-        {
-            return BadRequest("Файл изображения не был передан или он пустой.");
-        }
-
         var result = await _cvService.RecognizeAsync(photo);
-
         return Ok(result);
     }
 }
