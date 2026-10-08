@@ -1,4 +1,6 @@
-fastapi
-uvicorn
-pydantic
-python-multipart
+fastapi==0.141.1
+uvicorn==0.54.0
+pydantic==2.13.5
+python-multipart==0.0.32
+easyocr==1.7.2
+opencv-python-headless==4.14.0.94
