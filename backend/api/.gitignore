@@ -1,2 +1,3 @@
-**/bin/
-**/obj/
+bin/
+obj/
+Properties/launchSettings.json
