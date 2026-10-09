@@ -2,6 +2,7 @@ using MeterVision.Api.Services;
 using MeterVision.Api.Services.Abstractions;
 using MeterVision.Api.Database;
 using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Регистрируем заглушку сервиса распознавания
@@ -11,8 +12,7 @@ builder.Services.AddScoped<ICvService, CvServiceStub>();
 builder.Services.AddDbContext<AppDatabase>(options =>
     options.UseInMemoryDatabase("MeterVisionDb"));
 
-// Сервис аутентификации 
-builder.Services.AddSingleton<IAuthService, AuthServiceStub>();
+
 // Add services to the container.
 
 builder.Services.AddControllers();

@@ -15,6 +15,5 @@ public class AppDatabase : DbContext
 
     // Таблицы базы данных
     public DbSet<User> Users => Set<User>();
-    public DbSet<Meter> Meters => Set<Meter>();
-    public DbSet<MeterReading> MeterReadings => Set<MeterReading>();
+
 }

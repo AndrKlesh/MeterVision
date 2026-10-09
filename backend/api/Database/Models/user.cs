@@ -14,7 +14,6 @@ public class User
     public string PasswordHash { get; set; } = string.Empty;
     //Дата и время создания аккаунта
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    //тут список т.к. счетчик может быть не один
-    public List<Meter> Meters { get; set; } = new();
+
 }
 

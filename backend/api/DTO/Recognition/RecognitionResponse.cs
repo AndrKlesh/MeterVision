@@ -19,9 +19,4 @@ public class RecognitionResponse
     /// Уровень уверенности распознавания от 0.0 до 1.0
     /// </summary>
     public double Confidence { get; set; }
-
-    /// <summary>
-    /// Ссылка или путь к сохраненной фотографии на сервере
-    /// </summary>
-    public string PhotoUrl { get; set; } = string.Empty;
 }
