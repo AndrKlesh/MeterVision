@@ -1,29 +1,30 @@
+using MeterVision.Api.Controllers;
+using MeterVision.Api.Models;
 using MeterVision.Api.Services;
 using MeterVision.Api.Services.Abstractions;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Регистрируем заглушку сервиса распознавания
-builder.Services.AddScoped<ICvService, CvServiceStub>();
-
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddScoped<IAuthService, AuthServiceStub>();
+builder.Services.AddScoped<ICvService, CvServiceStub>();
+builder.Services.AddScoped<IAuthService, AuthServiceStub>();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
 
+
 app.UseHttpsRedirection();
-
+//app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
+
 
 app.Run();
