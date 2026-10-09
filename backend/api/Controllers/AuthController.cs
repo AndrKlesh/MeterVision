@@ -10,7 +10,7 @@ namespace MeterVision.Api.Controllers;
 /// Контроллер для аутентификации пользователей и управления сессиями.
 /// </summary>
 [ApiController]
-[Route("api/auth")]
+[Route("api/v1/auth")]
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
