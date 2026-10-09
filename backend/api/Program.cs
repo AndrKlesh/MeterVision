@@ -1,10 +1,17 @@
 using MeterVision.Api.Services;
 using MeterVision.Api.Services.Abstractions;
+using MeterVision.Api.Database;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Регистрируем заглушку сервиса распознавания
 builder.Services.AddScoped<ICvService, CvServiceStub>();
+
+// База данных приложения 
+builder.Services.AddDbContext<AppDatabase>(options =>
+    options.UseInMemoryDatabase("MeterVisionDb"));
+
 
 // Add services to the container.
 
