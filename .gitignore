@@ -1,0 +1,12 @@
+
+.DS_Store
+**/.DS_Store
+
+# Flutter and Dart generated files
+**/.dart_tool/
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/.pub/
+**/build/
+**/android/.gradle/
+**/macos/Flutter/ephemeral/
