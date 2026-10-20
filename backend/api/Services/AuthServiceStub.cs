@@ -1,5 +1,6 @@
 namespace MeterVision.Api.Services;
 
+using System.Security.Authentication;
 using MeterVision.Api.Services.Abstractions;
 
 public class AuthServiceStub : IAuthService
@@ -18,7 +19,7 @@ public class AuthServiceStub : IAuthService
             return Task.FromResult(fakeToken);
         }
 
-        return Task.FromResult("Invalid login or password");
+        throw new AuthenticationException("Invalid login or password");
     }
 
     public Task LogoutAsync(string token)

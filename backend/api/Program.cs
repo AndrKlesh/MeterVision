@@ -12,9 +12,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
 
-builder.Services.AddDbContext<AppDatabase>(options =>
-    options.UseInMemoryDatabase("MeterVisionDb"));
+builder.Services.AddDbContext<AppDatabase>(options => options.UseInMemoryDatabase("MeterVisionDb"));
 
+builder.Services.AddScoped<IReadingService, ReadingServiceStub>();
 builder.Services.AddScoped<IAuthService, AuthServiceStub>();
 builder.Services.AddScoped<ICvService, CvServiceStub>();
 

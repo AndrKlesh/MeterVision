@@ -2,8 +2,8 @@
 namespace MeterVision.Api.Models;
 
 /// <summary>
-/// Represents the data required to authenticate a user.
+/// Данные, необходимые для аутентификации пользователя.
 /// </summary>
-/// <param name="Username">The username of the user.</param>
-/// <param name="Password">The password of the user.</param>
+/// <param name="Username">Имя пользователя.</param>
+/// <param name="Password">Пароль пользователя.</param>
 public record LoginDto(string Username, string Password);

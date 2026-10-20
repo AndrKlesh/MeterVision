@@ -1,7 +1,7 @@
 namespace MeterVision.Api.Models;
 
 /// <summary>
-/// Represents the data required to log out a user.
+/// Данные, необходимые для выхода пользователя из системы.
 /// </summary>
-/// <param name="token">The authentication token of the user to invalidate.</param>
+/// <param name="token">Токен аутентификации пользователя для выхода из всех сессий.</param>
 public record LogoutDto(string token);
