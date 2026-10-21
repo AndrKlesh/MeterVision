@@ -3,36 +3,33 @@ using MeterVision.Api.Services.Abstractions;
 
 namespace MeterVision.Api.Services;
 
-/// <summary>
-/// Заглушка сервиса показаний: всегда возвращает одни и те же фейковые данные.
-/// </summary>
 public class ReadingServiceStub : IReadingService
 {
     public Task<RecognizeResponseDto> RecognizeAsync(Stream photo, string fileName)
     {
-        var result = new RecognizeResponseDto(Guid.NewGuid(), 12345.6m, "SN-000123", 0.92, 0.88);
+        var result = new RecognizeResponseDto(1, 12345.6, "SN-000123", 0.92);
         return Task.FromResult(result);
     }
 
-    public Task<ReadingDto> ConfirmAsync(Guid readingId, ConfirmReadingDto dto)
+    public Task<MeterDetailDto> ConfirmAsync(int id, ConfirmReadingDto dto)
     {
-        var result = new ReadingDto(readingId, dto.Value, dto.SerialNumber, "Confirmed", DateTime.UtcNow, DateTime.UtcNow);
+        var result = new MeterDetailDto(id, dto.SerialNumber, "вода", "Подтверждено", dto.Value, 0.92, DateTime.UtcNow, DateTime.UtcNow);
         return Task.FromResult(result);
     }
 
-    public Task<IReadOnlyList<ReadingDto>> GetListAsync(int page, int pageSize)
+    public Task<IReadOnlyList<MeterDetailDto>> GetListAsync(int page, int pageSize)
     {
-        var list = new List<ReadingDto>
+        var list = new List<MeterDetailDto>
         {
-            new(Guid.NewGuid(), 100.5m, "SN-000123", "Confirmed", DateTime.UtcNow, DateTime.UtcNow),
-            new(Guid.NewGuid(), 120.0m, "SN-000123", "Pending", DateTime.UtcNow, null)
+            new(1, "SN-000123", "вода", "Подтверждено", 100.5, 0.95, DateTime.UtcNow, DateTime.UtcNow),
+            new(2, "SN-000456", "электро", "Ожидает", 2300.0, 0.88, DateTime.UtcNow, null)
         };
-        return Task.FromResult<IReadOnlyList<ReadingDto>>(list);
+        return Task.FromResult<IReadOnlyList<MeterDetailDto>>(list);
     }
 
-    public Task<ReadingDto?> GetByIdAsync(Guid id)
+    public Task<MeterDetailDto?> GetByIdAsync(int id)
     {
-        var result = new ReadingDto(id, 12345.6m, "SN-000123", "Pending", DateTime.UtcNow, null);
-        return Task.FromResult<ReadingDto?>(result);
+        var result = new MeterDetailDto(id, "SN-000123", "вода", "Ожидает", 12345.6, 0.92, DateTime.UtcNow, null);
+        return Task.FromResult<MeterDetailDto?>(result);
     }
 }

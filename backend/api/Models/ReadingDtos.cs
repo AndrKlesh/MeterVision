@@ -2,22 +2,21 @@ namespace MeterVision.Api.Models;
 
 /// <summary>Результат распознавания фото счётчика.</summary>
 public record RecognizeResponseDto(
-    Guid ReadingId,
-    decimal? Value,
+    int Id,
+    double? Value,
     string? SerialNumber,
-    double ValueConfidence,
-    double SerialNumberConfidence
-);
+    double Confidence);
 
 /// <summary>Данные, которые подтвердил или исправил пользователь.</summary>
-public record ConfirmReadingDto(decimal Value, string SerialNumber);
+public record ConfirmReadingDto(double Value, string SerialNumber);
 
-/// <summary>Данные о показании для передачи клиенту.</summary>
-public record ReadingDto(
-    Guid Id,
-    decimal Value,
+/// <summary>Счётчик с последним показанием.</summary>
+public record MeterDetailDto(
+    int Id,
     string SerialNumber,
+    string Type,
     string Status,
+    double LastValue,
+    double Confidence,
     DateTime CreatedAt,
-    DateTime? ConfirmedAt
-);
+    DateTime? ConfirmedAt);
