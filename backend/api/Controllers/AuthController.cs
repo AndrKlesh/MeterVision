@@ -1,8 +1,8 @@
 
 using System.Security.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using MeterVision.Api.Models;
 using MeterVision.Api.Services.Abstractions;
+using MeterVision.Api.Controllers.DTO;
 
 namespace MeterVision.Api.Controllers;
 
@@ -27,7 +27,7 @@ public class AuthController : ControllerBase
     /// <returns>Токен доступа Bearer.</returns>
     /// <response code="200">Успешный вход в систему.</response>
     /// <response code="401">Неверный логин или пароль.</response>
-    
+
     [HttpPost("login")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -51,7 +51,7 @@ public class AuthController : ControllerBase
     /// <returns>Результат завершения сессии.</returns>
     /// <response code="200">Сессия успешно завершена.</response>
     /// <response code="400">Недействительный токен или сессия уже завершена.</response>
-    
+
     [HttpPost("logout")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -59,7 +59,7 @@ public class AuthController : ControllerBase
     {
         try
         {
-            await _authService.LogoutAsync(dto.token);
+            await _authService.LogoutAsync(dto.Token);
             return Ok(new { message = "Successful logout" });
         }
         catch (InvalidOperationException ex)
@@ -75,7 +75,7 @@ public class AuthController : ControllerBase
     /// <returns>Результат завершения всех сессий.</returns>
     /// <response code="200">Все сессии успешно завершены.</response>
     /// <response code="400">Недействительный токен.</response>
-    
+
     [HttpPost("logoutall")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -83,7 +83,7 @@ public class AuthController : ControllerBase
     {
         try
         {
-            await _authService.LogoutAllAsync(dto.token);
+            await _authService.LogoutAllAsync(dto.Token);
             return Ok(new { message = "All active sessions have been completed successfully" });
         }
         catch (InvalidOperationException ex)

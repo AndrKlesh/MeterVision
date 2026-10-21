@@ -1,5 +1,3 @@
-using MeterVision.Api.DTO.Recognition;
-
 namespace MeterVision.Api.Services.Abstractions;
 
 /// <summary>

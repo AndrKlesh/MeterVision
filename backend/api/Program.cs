@@ -1,5 +1,3 @@
-using MeterVision.Api.Controllers;
-using MeterVision.Api.Models;
 using MeterVision.Api.Services;
 using MeterVision.Api.Services.Abstractions;
 using MeterVision.Api.Database;
