@@ -1,4 +1,3 @@
-using MeterVision.Api.DTO.Recognition;
 using MeterVision.Api.Services.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 
