@@ -8,9 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Регистрируем заглушку сервиса распознавания
 builder.Services.AddScoped<ICvService, CvServiceStub>();
 
-// База данных приложения 
+//подключение к базе данных приложения
 builder.Services.AddDbContext<AppDatabase>(options =>
-    options.UseInMemoryDatabase("MeterVisionDb"));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("MeterVisionDb")));
 
 
 // Add services to the container.
