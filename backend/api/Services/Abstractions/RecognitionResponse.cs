@@ -1,4 +1,4 @@
-namespace MeterVision.Api.DTO.Recognition;
+namespace MeterVision.Api.Services.Abstractions;
 
 /// <summary>
 /// Ответ с результатами распознавания прибора учета
