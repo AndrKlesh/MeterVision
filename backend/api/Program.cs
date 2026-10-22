@@ -15,6 +15,7 @@ builder.Services.AddDbContext<AppDatabase>(options =>
 
 builder.Services.AddScoped<IAuthService, AuthServiceStub>();
 builder.Services.AddScoped<ICvService, CvServiceStub>();
+builder.Services.AddScoped<IMeterService, MeterService>();
 
 var app = builder.Build();
 
