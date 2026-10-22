@@ -13,7 +13,8 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<AppDatabase>(options =>
     options.UseInMemoryDatabase("MeterVisionDb"));
 
-builder.Services.AddScoped<IAuthService, AuthServiceStub>();
+//builder.Services.AddScoped<IAuthService, AuthServiceStub>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICvService, CvServiceStub>();
 
 var app = builder.Build();
@@ -21,6 +22,12 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    /// <summary>
+    /// Добавляет тестового пользователя.
+    /// </summary>
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<AppDatabase>();
+    DbSeeder.Seed(db);
 }
 
 
