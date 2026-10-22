@@ -8,7 +8,6 @@ public class User
     /// <summary>
     /// Уникальный первичный ключ пользователя
     /// </summary>
-    // генерируется сам
     public Guid Id { get; set; } = Guid.NewGuid();
 
     /// <summary>
