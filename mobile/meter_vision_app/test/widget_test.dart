@@ -1,30 +1,89 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:meter_vision_app/main.dart';
+import 'package:meter_vision_app/presentation/views/login/login_view.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  Widget createApp() {
+    return const MaterialApp(home: LoginView());
+  }
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  group('MeterVision — экран авторизации', () {
+    testWidgets('Отображает поля логина и пароля', (tester) async {
+      await tester.pumpWidget(createApp());
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+      expect(find.text('MeterVision'), findsOneWidget);
+      expect(find.text('Вход в аккаунт'), findsOneWidget);
+      expect(find.byKey(const Key('loginField')), findsOneWidget);
+      expect(find.byKey(const Key('passwordField')), findsOneWidget);
+      expect(find.byKey(const Key('loginButton')), findsOneWidget);
+    });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    testWidgets('Пустые поля показывают ошибки валидации', (tester) async {
+      await tester.pumpWidget(createApp());
+
+      await tester.tap(find.byKey(const Key('loginButton')));
+      await tester.pump();
+
+      expect(find.text('Введите логин').last, findsOneWidget);
+      expect(find.text('Введите пароль').last, findsOneWidget);
+    });
+    testWidgets('Короткий логин показывает ошибку', (tester) async {
+      await tester.pumpWidget(createApp());
+
+      await tester.enterText(find.byKey(const Key('loginField')), 'ab');
+      await tester.enterText(find.byKey(const Key('passwordField')), '123456');
+
+      await tester.tap(find.byKey(const Key('loginButton')));
+      await tester.pump();
+
+      expect(find.text('Минимум 3 символа'), findsOneWidget);
+    });
+
+    testWidgets('Короткий пароль показывает ошибку', (tester) async {
+      await tester.pumpWidget(createApp());
+
+      await tester.enterText(find.byKey(const Key('loginField')), 'alex');
+      await tester.enterText(find.byKey(const Key('passwordField')), '123');
+
+      await tester.tap(find.byKey(const Key('loginButton')));
+      await tester.pump();
+
+      expect(find.text('Минимум 6 символов'), findsOneWidget);
+    });
+
+    testWidgets('Кнопка показа пароля меняет видимость', (tester) async {
+      await tester.pumpWidget(createApp());
+
+      expect(find.byIcon(Icons.visibility_outlined), findsOneWidget);
+      expect(find.byIcon(Icons.visibility_off_outlined), findsNothing);
+
+      await tester.tap(find.byKey(const Key('togglePassword')));
+      await tester.pump();
+
+      expect(find.byIcon(Icons.visibility_off_outlined), findsOneWidget);
+      expect(find.byIcon(Icons.visibility_outlined), findsNothing);
+    });
+
+    testWidgets('После отправки валидных данных показывается ошибка входа', (
+      tester,
+    ) async {
+      await tester.pumpWidget(createApp());
+
+      await tester.enterText(find.byKey(const Key('loginField')), 'alex');
+      await tester.enterText(find.byKey(const Key('passwordField')), '123456');
+
+      await tester.tap(find.byKey(const Key('loginButton')));
+      await tester.pump();
+
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+
+      await tester.pump(const Duration(seconds: 1));
+      await tester.pump();
+
+      expect(
+        find.text('Не удалось войти. Проверьте логин и пароль.'),
+        findsOneWidget,
+      );
+    });
   });
 }
