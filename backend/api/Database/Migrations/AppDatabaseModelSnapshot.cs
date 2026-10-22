@@ -45,7 +45,7 @@ namespace MeterVision.Api.Database.Migrations
                     b.ToTable("Meters");
                 });
 
-            modelBuilder.Entity("MeterVision.Api.Database.Models.MeterReading", b =>
+            modelBuilder.Entity("MeterVision.Api.Database.Models.MeterRecord", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -54,16 +54,13 @@ namespace MeterVision.Api.Database.Migrations
                     b.Property<DateTime?>("ConfirmedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("ConfirmedSerialNumber")
-                        .HasColumnType("text");
-
                     b.Property<decimal?>("ConfirmedValue")
                         .HasColumnType("numeric");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid?>("MeterId")
+                    b.Property<Guid>("MeterId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("PhotoPath")
@@ -79,12 +76,6 @@ namespace MeterVision.Api.Database.Migrations
                     b.Property<double?>("SerialNumberConfidence")
                         .HasColumnType("double precision");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
                     b.Property<double?>("ValueConfidence")
                         .HasColumnType("double precision");
 
@@ -92,9 +83,7 @@ namespace MeterVision.Api.Database.Migrations
 
                     b.HasIndex("MeterId");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("MeterReadings");
+                    b.ToTable("MeterRecords");
                 });
 
             modelBuilder.Entity("MeterVision.Api.Database.Models.User", b =>
@@ -126,7 +115,7 @@ namespace MeterVision.Api.Database.Migrations
             modelBuilder.Entity("MeterVision.Api.Database.Models.Meter", b =>
                 {
                     b.HasOne("MeterVision.Api.Database.Models.User", "User")
-                        .WithMany("Meters")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -134,33 +123,20 @@ namespace MeterVision.Api.Database.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("MeterVision.Api.Database.Models.MeterReading", b =>
+            modelBuilder.Entity("MeterVision.Api.Database.Models.MeterRecord", b =>
                 {
                     b.HasOne("MeterVision.Api.Database.Models.Meter", "Meter")
-                        .WithMany("Readings")
-                        .HasForeignKey("MeterId");
-
-                    b.HasOne("MeterVision.Api.Database.Models.User", "User")
-                        .WithMany("Readings")
-                        .HasForeignKey("UserId")
+                        .WithMany("Records")
+                        .HasForeignKey("MeterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Meter");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MeterVision.Api.Database.Models.Meter", b =>
                 {
-                    b.Navigation("Readings");
-                });
-
-            modelBuilder.Entity("MeterVision.Api.Database.Models.User", b =>
-                {
-                    b.Navigation("Meters");
-
-                    b.Navigation("Readings");
+                    b.Navigation("Records");
                 });
 #pragma warning restore 612, 618
         }

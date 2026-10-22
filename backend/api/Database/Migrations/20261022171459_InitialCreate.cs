@@ -47,48 +47,35 @@ namespace MeterVision.Api.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MeterReadings",
+                name: "MeterRecords",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    MeterId = table.Column<Guid>(type: "uuid", nullable: true),
+                    MeterId = table.Column<Guid>(type: "uuid", nullable: false),
                     PhotoPath = table.Column<string>(type: "text", nullable: false),
                     RecognizedValue = table.Column<decimal>(type: "numeric", nullable: true),
                     RecognizedSerialNumber = table.Column<string>(type: "text", nullable: true),
                     ValueConfidence = table.Column<double>(type: "double precision", nullable: true),
                     SerialNumberConfidence = table.Column<double>(type: "double precision", nullable: true),
                     ConfirmedValue = table.Column<decimal>(type: "numeric", nullable: true),
-                    ConfirmedSerialNumber = table.Column<string>(type: "text", nullable: true),
-                    Status = table.Column<int>(type: "integer", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ConfirmedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MeterReadings", x => x.Id);
+                    table.PrimaryKey("PK_MeterRecords", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MeterReadings_Meters_MeterId",
+                        name: "FK_MeterRecords_Meters_MeterId",
                         column: x => x.MeterId,
                         principalTable: "Meters",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_MeterReadings_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_MeterReadings_MeterId",
-                table: "MeterReadings",
+                name: "IX_MeterRecords_MeterId",
+                table: "MeterRecords",
                 column: "MeterId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_MeterReadings_UserId",
-                table: "MeterReadings",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Meters_UserId",
@@ -100,7 +87,7 @@ namespace MeterVision.Api.Database.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "MeterReadings");
+                name: "MeterRecords");
 
             migrationBuilder.DropTable(
                 name: "Meters");

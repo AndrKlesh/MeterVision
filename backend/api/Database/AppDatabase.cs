@@ -1,7 +1,6 @@
 using MeterVision.Api.Database.Models;
 using Microsoft.EntityFrameworkCore;
 
-// пространство имен, в котором лежит этот файл
 namespace MeterVision.Api.Database;
 
 /// <summary>
@@ -34,7 +33,7 @@ public class AppDatabase : DbContext
     /// <summary>
     /// Таблица показаний счетчиков
     /// </summary>
-    public DbSet<MeterReading> MeterReadings => Set<MeterReading>();
+    public DbSet<MeterRecord> MeterRecords => Set<MeterRecord>();
 
     /// <summary>
     /// Настройка связей между таблицами
@@ -52,28 +51,18 @@ public class AppDatabase : DbContext
             // у счетчика есть один пользователь
             .HasOne(meter => meter.User)
             // а у пользователя может быть много счетчиков
-            .WithMany(user => user.Meters)
+            .WithMany()
             // связь хранится в поле UserId у счетчика
             .HasForeignKey(meter => meter.UserId);
 
-        // связь между пользователем и его показаниями
-        // настраиваем таблицу показаний
-        modelBuilder.Entity<MeterReading>()
-            // у показания один пользователь, который его отправил
-            .HasOne(reading => reading.User)
-            // а пользователь может отправить много показаний
-            .WithMany(user => user.Readings)
-            // связь хранится в поле UserId у показания
-            .HasForeignKey(reading => reading.UserId);
-
-        // связь между счетчиком и его показаниями
-        // снова настраиваем таблицу показаний
-        modelBuilder.Entity<MeterReading>()
-            // показание относится к одному счетчику
-            .HasOne(reading => reading.Meter)
+        // связь между счетчиком и его записями показаний
+        // настраиваем таблицу записей
+        modelBuilder.Entity<MeterRecord>()
+            // запись относится к одному счетчику
+            .HasOne(record => record.Meter)
             // а со счетчика можно снять много показаний
-            .WithMany(meter => meter.Readings)
-            // связь хранится в поле MeterId (может быть пустым, если счетчик еще не выбран)
-            .HasForeignKey(reading => reading.MeterId);
+            .WithMany(meter => meter.Records)
+            // связь хранится в поле MeterId у записи
+            .HasForeignKey(record => record.MeterId);
     }
 }

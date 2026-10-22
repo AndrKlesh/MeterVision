@@ -32,7 +32,7 @@ public class Meter
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     /// <summary>
-    /// Показания, снятые с этого счетчика
+    /// Записи показания, снятые с этого счетчика
     /// </summary>
-    public List<MeterReading> Readings { get; set; } = new();
+    public List<MeterRecord> Records { get; set; } = new();
 }

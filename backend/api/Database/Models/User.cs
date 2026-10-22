@@ -31,14 +31,5 @@ public class User
     /// </summary>
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    /// <summary>
-    /// Счетчики пользователя (у одного пользователя может быть несколько счетчиков)
-    /// </summary>
-    public List<Meter> Meters { get; set; } = new();
-
-    /// <summary>
-    /// Все показания, которые передал пользователь
-    /// </summary>
-    public List<MeterReading> Readings { get; set; } = new();
 }
 
