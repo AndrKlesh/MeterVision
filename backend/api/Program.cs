@@ -14,6 +14,7 @@ builder.Services.AddDbContext<AppDatabase>(options =>
     options.UseInMemoryDatabase("MeterVisionDb"));
 
 builder.Services.AddScoped<IAuthService, AuthServiceStub>();
+builder.Services.AddScoped<IReadingService, ReadingServiceStub>();
 builder.Services.AddScoped<ICvService, CvServiceStub>();
 
 var app = builder.Build();
