@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Mapping, Optional
 from app.schemas import MeterReading
 
 
@@ -17,3 +17,11 @@ class OCREngine(ABC):
     def warmup(self) -> None:
         """Загрузка моделей и прогрев. Синхронная, вызывается в фоновом потоке при старте."""
         return None
+
+    def for_request(self, options: Mapping[str, Optional[str]]) -> "OCREngine":
+        """Хук для параметров конкретного запроса (сейчас: mock_scenario).
+
+        По умолчанию параметры игнорируются и возвращается сам движок, поэтому
+        основной движок не знает о заглушке, а эндпоинту не нужны проверки типа.
+        """
+        return self

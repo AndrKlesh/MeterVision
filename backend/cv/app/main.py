@@ -6,12 +6,13 @@ import uuid
 from contextlib import asynccontextmanager
 from typing import Optional
 
-from fastapi import FastAPI, File, Header, Query, Request, UploadFile
+from fastapi import Depends, FastAPI, File, Header, Query, Request, UploadFile
 from fastapi.responses import JSONResponse
 
-from app.config import settings
+from app import config
+from app.config import Settings
+from app.engine.base import OCREngine
 from app.engine.factory import create_engine
-from app.engine.mock_engine import SCENARIOS, MockOCREngine
 from app.errors import (
     CvError,
     EmptyFileError,
@@ -19,40 +20,34 @@ from app.errors import (
     InvalidImageError,
     NotReadyError,
     NotRecognizedError,
-    UnknownMockScenarioError,
     UnsupportedMediaTypeError,
 )
 from app.schemas import ErrorBody, HealthResponse, OCRResponse
 
-logging.basicConfig(level=settings.log_level, format="%(message)s")
 logger = logging.getLogger("cv")
 
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # Прогрев в фоне: пока он идёт, сервер уже отвечает и /health отдаёт 503 not_ready
-    threading.Thread(target=app.state.engine.warmup, name="warmup", daemon=True).start()
-    yield
+_ERROR_RESPONSES = {code: {"model": ErrorBody} for code in (400, 413, 415, 422, 500, 503)}
 
 
-app = FastAPI(title="CV Service", lifespan=lifespan)
-# Движок создаётся сразу (это дёшево), тяжёлая загрузка моделей идёт в warmup()
-app.state.engine = create_engine(settings)
+# --- зависимости: единственное место, откуда эндпоинты берут движок и настройки ---
+# В тестах подменяются через app.dependency_overrides[get_engine] / [get_settings]
 
-_ERROR_RESPONSES = {
-    code: {"model": ErrorBody}
-    for code in (400, 413, 415, 422, 500, 503)
-}
+def get_engine(request: Request) -> OCREngine:
+    return request.app.state.engine
 
 
-@app.exception_handler(CvError)
+def get_settings(request: Request) -> Settings:
+    return request.app.state.settings
+
+
+# --- обработчики ошибок ---
+
 async def cv_error_handler(request: Request, exc: CvError):
     return JSONResponse(status_code=exc.status_code, content={"detail": exc.to_detail()})
 
 
-@app.exception_handler(Exception)
 async def unexpected_error_handler(request: Request, exc: Exception):
-    # Подробности только в логе, наружу не отдаём
+    # Подробности только в логе
     logger.exception("unexpected error")
     return JSONResponse(
         status_code=500,
@@ -71,15 +66,16 @@ def _log_request(correlation_id: str, outcome: str, started: float, file_size: O
     }, ensure_ascii=False))
 
 
+# --- эндпоинты ---
+
 # Объявлен как def: FastAPI запустит его в пуле потоков, и тяжёлое распознавание не блокирует /health
-@app.post("/api/ocr", response_model=OCRResponse, responses=_ERROR_RESPONSES)
 def recognize(
-    request: Request,
     file: UploadFile = File(...),
     mock_scenario: Optional[str] = Query(None, description="Только при USE_MOCK=true, иначе игнорируется"),
     x_correlation_id: Optional[str] = Header(None),
+    engine: OCREngine = Depends(get_engine),
+    settings: Settings = Depends(get_settings),
 ):
-    engine = request.app.state.engine
     correlation_id = x_correlation_id or uuid.uuid4().hex
     started = time.perf_counter()
     file_size: Optional[int] = None
@@ -100,15 +96,8 @@ def recognize(
         if file_size > settings.max_file_size:
             raise FileTooLargeError(settings.max_file_size_mb)
 
-        if settings.use_mock and isinstance(engine, MockOCREngine):
-            scenario = mock_scenario or "ok"
-            if scenario not in SCENARIOS:
-                raise UnknownMockScenarioError(
-                    f"Неизвестный mock_scenario. Допустимо: {', '.join(SCENARIOS)}."
-                )
-            readings = engine.recognize(image_bytes, scenario=scenario)
-        else:
-            readings = engine.recognize(image_bytes)
+        # Заглушка выбирает сценарий, поэтому основной движок будет работать т.к. engine.for_request()
+        readings = engine.for_request({"mock_scenario": mock_scenario}).recognize(image_bytes)
 
         outcome = "recognized"
         return OCRResponse(readings=readings)
@@ -125,9 +114,10 @@ def recognize(
         _log_request(correlation_id, outcome, started, file_size)
 
 
-@app.get("/health", response_model=HealthResponse, responses={503: {"model": ErrorBody}})
-def health(request: Request):
-    engine = request.app.state.engine
+def health(
+    engine: OCREngine = Depends(get_engine),
+    settings: Settings = Depends(get_settings),
+):
     if not engine.is_ready:
         raise NotReadyError()
     return HealthResponse(
@@ -135,3 +125,34 @@ def health(request: Request):
         mode="mock" if settings.use_mock else "real",
         engine_ready=True,
     )
+
+
+def create_app(settings: Optional[Settings] = None, engine: Optional[OCREngine] = None) -> FastAPI:
+    """Собирает приложение. Параметры нужны тестам: чтобы подменить движок и настройки, не меняя глобальный app."""
+    settings = settings or config.settings
+    engine = engine or create_engine(settings)
+
+    logging.basicConfig(level=settings.log_level, format="%(message)s")
+
+    @asynccontextmanager
+    async def lifespan(app: FastAPI):
+        # Прогрев в фоне: пока он идёт, сервер уже отвечает и /health отдаёт 503 not_ready
+        threading.Thread(target=app.state.engine.warmup, name="warmup", daemon=True).start()
+        yield
+
+    app = FastAPI(title="CV Service", lifespan=lifespan)
+    app.state.settings = settings
+    app.state.engine = engine
+
+    app.add_exception_handler(CvError, cv_error_handler)
+    app.add_exception_handler(Exception, unexpected_error_handler)
+
+    app.add_api_route("/api/ocr", recognize, methods=["POST"], response_model=OCRResponse,
+                      responses=_ERROR_RESPONSES)
+    app.add_api_route("/health", health, methods=["GET"], response_model=HealthResponse,
+                      responses={503: {"model": ErrorBody}})
+    return app
+
+
+# Точка входа для `uvicorn app.main:app` (команда запуска остается прежней)
+app = create_app()

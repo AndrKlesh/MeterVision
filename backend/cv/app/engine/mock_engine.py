@@ -1,9 +1,9 @@
 import random
 import time
-from typing import List
+from typing import List, Mapping, Optional
 
 from app.engine.base import OCREngine
-from app.errors import InvalidImageError, NotRecognizedError
+from app.errors import InvalidImageError, NotRecognizedError, UnknownMockScenarioError
 from app.schemas import BoundingBox, MeterReading
 
 SCENARIOS = ("ok", "low_confidence", "not_recognized", "invalid_image", "slow")
@@ -12,13 +12,24 @@ SCENARIOS = ("ok", "low_confidence", "not_recognized", "invalid_image", "slow")
 class MockOCREngine(OCREngine):
     """Заглушка для разработки backend и приложения. Содержимое картинки игнорируется.
 
-    Сценарии (параметр scenario, в API это ?mock_scenario=...): см. docs/developer/api.md, раздел 7.
+    Сценарий выбирается параметром запроса ?mock_scenario=... (см. docs/developer/api.md, раздел 7)
+    через for_request(): он возвращает копию заглушки с нужным сценарием.
     """
 
-    def __init__(self, slow_delay_s: float = 5.0):
+    def __init__(self, slow_delay_s: float = 5.0, scenario: str = "ok"):
         self._slow_delay_s = slow_delay_s
+        self._scenario = scenario
 
-    def recognize(self, image_bytes: bytes, scenario: str = "ok") -> List[MeterReading]:
+    def for_request(self, options: Mapping[str, Optional[str]]) -> OCREngine:
+        scenario = options.get("mock_scenario") or "ok"
+        if scenario not in SCENARIOS:
+            raise UnknownMockScenarioError(
+                f"Неизвестный mock_scenario. Допустимо: {', '.join(SCENARIOS)}."
+            )
+        return MockOCREngine(slow_delay_s=self._slow_delay_s, scenario=scenario)
+
+    def recognize(self, image_bytes: bytes) -> List[MeterReading]:
+        scenario = self._scenario
         if scenario == "not_recognized":
             raise NotRecognizedError(missing=["serial_number"])
         if scenario == "invalid_image":
