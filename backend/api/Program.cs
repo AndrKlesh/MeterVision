@@ -11,7 +11,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
 
 builder.Services.AddDbContext<AppDatabase>(options =>
-    options.UseInMemoryDatabase("MeterVisionDb"));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("MeterVisionDb")));
 
 builder.Services.AddScoped<IAuthService, AuthServiceStub>();
 builder.Services.AddScoped<ICvService, CvServiceStub>();
