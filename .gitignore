@@ -1,0 +1,14 @@
+﻿# Dart and Flutter
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub/
+build/
+
+# IDE
+.idea/
+.vscode/
+
+# Local backup files
+*.backup
