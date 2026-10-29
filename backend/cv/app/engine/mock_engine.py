@@ -9,7 +9,7 @@ class MockOCREngine(OCREngine):
         return [
             MeterReading(
                 serial_number="SN-00482913",
-                reading_value="00457.8",
+                reading_value="50.99",
                 confidence=round(random.uniform(0.85, 0.99), 2),
                 bbox=BoundingBox(x=10, y=10, width=180, height=30),
             ),

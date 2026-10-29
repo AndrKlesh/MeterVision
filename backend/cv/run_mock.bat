@@ -1,5 +1,6 @@
 @echo off
 cd /d %~dp0
 set USE_MOCK=true
-python -m uvicorn app.main:app --reload
+set PORT=8000
+python -m uvicorn app.main:app --reload --port %PORT% 
 pause
