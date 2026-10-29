@@ -14,6 +14,7 @@ builder.Services.AddDbContext<AppDatabase>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("MeterVisionDb")));
 
 builder.Services.AddScoped<IAuthService, AuthServiceStub>();
+builder.Services.AddScoped<IReadingService, ReadingServiceStub>();
 builder.Services.AddScoped<ICvService, CvServiceStub>();
 builder.Services.AddScoped<IMeterService, MeterService>();
 
