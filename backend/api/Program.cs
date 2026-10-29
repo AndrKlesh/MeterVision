@@ -13,14 +13,23 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<AppDatabase>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("MeterVisionDb")));
 
-builder.Services.AddScoped<IAuthService, AuthServiceStub>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IReadingService, ReadingServiceStub>();
 builder.Services.AddScoped<ICvService, CvServiceStub>();
+builder.Services.AddScoped<IMeterService, MeterService>();
+
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    /// <summary>
+    /// Добавляет тестового пользователя.
+    /// </summary>
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<AppDatabase>();
+    DbSeeder.Seed(db);
 }
 
 

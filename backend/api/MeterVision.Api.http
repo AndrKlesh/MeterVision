@@ -1,6 +1,18 @@
 @MeterVision.Api_HostAddress = http://localhost:5256
 
-GET {{MeterVision.Api_HostAddress}}/weatherforecast/
-Accept: application/json
+### Вход
+POST http://localhost:5256/api/v1/auth/login
+Content-Type: application/json
 
-###
+{
+  "username": "admin",
+  "password": "admin"
+}
+
+### Выход
+POST http://localhost:5256/api/v1/auth/logout
+Content-Type: application/json
+
+{
+  "token": "SCPivpTq_MBFrj0PhuKLevUQvhrNn6rueV4ZuEwxgcI"
+}
