@@ -37,6 +37,10 @@ async def recognize(file: UploadFile = File(...)):
         )
 
     readings = engine.recognize(image_bytes)
+
+    if not readings:
+        raise HTTPException(status_code=422, detail="Ничего не распознано")
+
     return OCRResponse(readings=readings)
 
 
