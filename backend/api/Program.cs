@@ -13,15 +13,11 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<AppDatabase>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("MeterVisionDb")));
 
-<<<<<<< HEAD
-builder.Services.AddScoped<IAuthService, AuthServiceStub>();
-builder.Services.AddScoped<IReadingService, ReadingServiceStub>();
-=======
-//builder.Services.AddScoped<IAuthService, AuthServiceStub>();
 builder.Services.AddScoped<IAuthService, AuthService>();
->>>>>>> origin/feature/31-real-auth
+builder.Services.AddScoped<IReadingService, ReadingServiceStub>();
 builder.Services.AddScoped<ICvService, CvServiceStub>();
 builder.Services.AddScoped<IMeterService, MeterService>();
+
 
 var app = builder.Build();
 
