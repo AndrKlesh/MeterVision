@@ -1,5 +1,6 @@
 using Mediator;
 using MeterVision.Api.Application.Commands.Recognition;
+using MeterVision.Api.Extensions;
 using MeterVision.Api.Services.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
@@ -25,9 +26,8 @@ public class RecognitionController : ControllerBase
     public async Task<ActionResult<RecognitionResponse>> UploadPhoto(IFormFile photo, CancellationToken cancellationToken)
     {
         using var stream = photo.OpenReadStream();
-        using var ms = new MemoryStream();
-        stream.CopyTo(ms);
-        byte[] bytes = ms.ToArray();
+        byte[] bytes = stream.ToArray();
+
         var result = await _mediator.Send(new RecognitionCommand(bytes), cancellationToken);
         return Ok(result);
     }
