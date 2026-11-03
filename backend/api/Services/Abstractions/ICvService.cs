@@ -1,3 +1,5 @@
+using MeterVision.Api.Application.Commands.Recognition;
+
 namespace MeterVision.Api.Services.Abstractions;
 
 /// <summary>
@@ -8,6 +10,6 @@ public interface ICvService
     /// <summary>
     /// Принимает фотографию счетчика, сохраняет ее и возвращает результат распознавания
     /// </summary>
-    /// <param name="photo">Файл изображения от пользователя</param>
-    Task<RecognitionResponse> RecognizeAsync(IFormFile photo);
+    /// <param name="recognitionCommand">Файл изображения от пользователя</param>
+    Task<RecognitionResponse> RecognizeAsync(RecognitionCommand recognitionCommand);
 }

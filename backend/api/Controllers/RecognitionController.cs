@@ -1,5 +1,8 @@
+using Mediator;
+using MeterVision.Api.Application.Commands.Recognition;
 using MeterVision.Api.Services.Abstractions;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace MeterVision.Api.Controllers;
 
@@ -10,20 +13,24 @@ namespace MeterVision.Api.Controllers;
 [Route("api/v1/recognition")]
 public class RecognitionController : ControllerBase
 {
-    private readonly ICvService _cvService;
-
-    public RecognitionController(ICvService cvService)
+    public RecognitionController(IMediator mediator)
     {
-        _cvService = cvService;
+        _mediator = mediator;
     }
 
     /// <summary>
     /// Загрузить фото счетчика и получить распознанные показания
     /// </summary>
     [HttpPost("upload")]
-    public async Task<ActionResult<RecognitionResponse>> UploadPhoto(IFormFile photo)
+    public async Task<ActionResult<RecognitionResponse>> UploadPhoto(IFormFile photo, CancellationToken cancellationToken)
     {
-        var result = await _cvService.RecognizeAsync(photo);
+        using var stream = photo.OpenReadStream();
+        using var ms = new MemoryStream();
+        stream.CopyTo(ms);
+        byte[] bytes = ms.ToArray();
+        var result = await _mediator.Send(new RecognitionCommand(bytes), cancellationToken);
         return Ok(result);
     }
+
+    private readonly IMediator _mediator;
 }

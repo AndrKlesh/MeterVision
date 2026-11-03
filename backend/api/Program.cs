@@ -12,11 +12,15 @@ builder.Services.AddEndpointsApiExplorer();
 //Регистрация генератора OpenAPI
 builder.Services.AddOpenApi();
 
+// Добавляем Mediator
+builder.Services.AddMediator();
+
 builder.Services.AddDbContext<AppDatabase>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("MeterVisionDb")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("MeterVisionDb"))
+);
 
 builder.Services.AddScoped<IAuthService, AuthServiceStub>();
-builder.Services.AddScoped<ICvService, CvServiceStub>();
+builder.Services.AddSingleton<ICvService, CvServiceStub>();
 
 var app = builder.Build();
 
