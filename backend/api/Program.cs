@@ -3,6 +3,8 @@ using MeterVision.Api.Services.Abstractions;
 using MeterVision.Api.Database;
 using Microsoft.EntityFrameworkCore;
 using MeterVision.Api.Middleware;
+using MeterVision.Api.Application.Behaviors;
+using FluentValidation;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,7 +15,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
 
 // Добавляем Mediator
-builder.Services.AddMediator();
+builder.Services.AddMediator(options =>
+{
+    // Регистрируем ваш обобщённый Behavior
+    options.PipelineBehaviors = [typeof(ValidationBehavior<,>)];
+});
+
+// Добавляем валидаторы из текущей сборки
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 builder.Services.AddDbContext<AppDatabase>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("MeterVisionDb"))

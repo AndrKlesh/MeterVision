@@ -1,9 +1,7 @@
 using Mediator;
 using MeterVision.Api.Application.Commands.Recognition;
 using MeterVision.Api.Extensions;
-using MeterVision.Api.Services.Abstractions;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 
 namespace MeterVision.Api.Controllers;
 
