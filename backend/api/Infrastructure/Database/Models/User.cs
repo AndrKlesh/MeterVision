@@ -1,4 +1,4 @@
-namespace MeterVision.Api.Database.Models;
+namespace MeterVision.Api.Infrastructure.Database.Models;
 
 /// <summary>
 /// сущность пользователя системы для сервиса аутентификации
@@ -16,19 +16,8 @@ public class User
     public string Username { get; set; } = string.Empty;
 
     /// <summary>
-    /// Почта
-    /// </summary>
-    public string Email { get; set; } = string.Empty;
-
-    /// <summary>
     /// Хэш пароля,чтобы пароль в закрытом доступе был(зашифрованным)
     /// </summary>
     public string PasswordHash { get; set; } = string.Empty;
-
-    /// <summary>
-    /// Дата и время создания аккаунта
-    /// </summary>
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
 }
 

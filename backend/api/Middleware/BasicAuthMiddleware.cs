@@ -1,6 +1,6 @@
 
 using System.Text;
-using MeterVision.Api.Services.Abstractions;
+using MeterVision.Api.Application.Abstractions.Services;
 
 namespace MeterVision.Api.Middleware;
 

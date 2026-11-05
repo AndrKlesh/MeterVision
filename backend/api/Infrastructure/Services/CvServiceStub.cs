@@ -1,7 +1,7 @@
+using MeterVision.Api.Application.Abstractions.Services;
 using MeterVision.Api.Application.Commands.Recognition;
-using MeterVision.Api.Services.Abstractions;
 
-namespace MeterVision.Api.Services;
+namespace MeterVision.Api.Infrastructure.Services;
 
 /// <summary>
 /// Заглушка сервиса компьютерного зрения и файлового хранилища

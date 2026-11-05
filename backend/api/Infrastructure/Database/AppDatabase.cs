@@ -1,7 +1,7 @@
-using MeterVision.Api.Database.Models;
+using MeterVision.Api.Infrastructure.Database.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace MeterVision.Api.Database;
+namespace MeterVision.Api.Infrastructure.Database;
 
 /// <summary>
 /// Контекст базы данных приложения: таблицы и связи между ними
@@ -26,16 +26,6 @@ public class AppDatabase : DbContext
     public DbSet<User> Users => Set<User>();
 
     /// <summary>
-    /// Таблица счетчиков
-    /// </summary>
-    public DbSet<Meter> Meters => Set<Meter>();
-
-    /// <summary>
-    /// Таблица показаний счетчиков
-    /// </summary>
-    public DbSet<MeterRecord> MeterRecords => Set<MeterRecord>();
-
-    /// <summary>
     /// Настройка связей между таблицами
     /// </summary>
     /// <param name="modelBuilder">Построитель модели базы данных</param>
@@ -45,24 +35,11 @@ public class AppDatabase : DbContext
         // вызываем настройку Entity Framework
         base.OnModelCreating(modelBuilder);
 
-        // связь между пользователем и его счетчиками
-        // настраиваем таблицу счетчиков
-        modelBuilder.Entity<Meter>()
-            // у счетчика есть один пользователь
-            .HasOne(meter => meter.User)
-            // а у пользователя может быть много счетчиков
-            .WithMany()
-            // связь хранится в поле UserId у счетчика
-            .HasForeignKey(meter => meter.UserId);
-
-        // связь между счетчиком и его записями показаний
-        // настраиваем таблицу записей
-        modelBuilder.Entity<MeterRecord>()
-            // запись относится к одному счетчику
-            .HasOne(record => record.Meter)
-            // а со счетчика можно снять много показаний
-            .WithMany(meter => meter.Records)
-            // связь хранится в поле MeterId у записи
-            .HasForeignKey(record => record.MeterId);
+        modelBuilder.Entity<User>(entity =>
+        {
+            // Уникальность Username — ключевое требование для аутентификации
+            entity.HasIndex(u => u.Username)
+                  .IsUnique();
+        });
     }
 }

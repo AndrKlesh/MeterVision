@@ -1,6 +1,6 @@
 using System.Security.Authentication;
 
-namespace MeterVision.Api.Services.Abstractions;
+namespace MeterVision.Api.Application.Abstractions.Services;
 
 /// <summary>
 /// Контракт сервиса аутентификации.

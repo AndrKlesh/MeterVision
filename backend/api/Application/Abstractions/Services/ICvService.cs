@@ -1,6 +1,6 @@
 using MeterVision.Api.Application.Commands.Recognition;
 
-namespace MeterVision.Api.Services.Abstractions;
+namespace MeterVision.Api.Application.Abstractions.Services;
 
 /// <summary>
 /// Контракт сервиса для обработки и распознавания показаний счетчиков

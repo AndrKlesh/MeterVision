@@ -1,10 +1,12 @@
-using MeterVision.Api.Services;
-using MeterVision.Api.Services.Abstractions;
-using MeterVision.Api.Database;
 using Microsoft.EntityFrameworkCore;
 using MeterVision.Api.Middleware;
 using MeterVision.Api.Application.Behaviors;
 using FluentValidation;
+using MeterVision.Api.Application.Abstractions.Services;
+using MeterVision.Api.Infrastructure.Services;
+using MeterVision.Api.Infrastructure.Database;
+using MeterVision.Api.Application.Abstractions.Repositories;
+using MeterVision.Api.Infrastructure.Repositories;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,28 +16,36 @@ builder.Services.AddEndpointsApiExplorer();
 //Регистрация генератора OpenAPI
 builder.Services.AddOpenApi();
 
+// Добавляем валидаторы из текущей сборки
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+
 // Добавляем Mediator
 builder.Services.AddMediator(options =>
 {
+    // Меняем lifetime с Singleton (по умолчанию) на Scoped
+    options.ServiceLifetime = ServiceLifetime.Scoped;
     // Регистрируем ваш обобщённый Behavior
     options.PipelineBehaviors = [typeof(ValidationBehavior<,>)];
 });
 
-// Добавляем валидаторы из текущей сборки
-builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+
+// builder.Services.AddDbContext<AppDatabase>(options =>
+//     options.UseNpgsql(builder.Configuration.GetConnectionString("MeterVisionDb"))
+// );
 
 builder.Services.AddDbContext<AppDatabase>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("MeterVisionDb"))
+    options.UseInMemoryDatabase("MeterVisionDb")
 );
 
-builder.Services.AddScoped<IAuthService, AuthServiceStub>();
-builder.Services.AddSingleton<ICvService, CvServiceStub>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ICvService, CvServiceStub>();
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    // Генерация JSON-файла спецификации (обычно /openapi/v1.json)
+    // Генерация JSON-файла спецификации
     app.MapOpenApi();
 
     // Подключение Swagger UI для визуализации
@@ -48,9 +58,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseMiddleware<BasicAuthMiddleware>();
 app.UseHttpsRedirection();
-//app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-
 
 app.Run();

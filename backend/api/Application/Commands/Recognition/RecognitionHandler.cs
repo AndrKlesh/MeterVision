@@ -1,5 +1,5 @@
 using Mediator;
-using MeterVision.Api.Services.Abstractions;
+using MeterVision.Api.Application.Abstractions.Services;
 
 namespace MeterVision.Api.Application.Commands.Recognition;
 
