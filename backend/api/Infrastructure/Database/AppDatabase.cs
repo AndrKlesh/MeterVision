@@ -4,35 +4,34 @@ using Microsoft.EntityFrameworkCore;
 namespace MeterVision.Api.Infrastructure.Database;
 
 /// <summary>
-/// Контекст базы данных приложения: таблицы и связи между ними
+/// Контекст базы данных приложения: таблицы и связи между ними.
 /// </summary>
-// наследуем DbContext, чтобы Entity Framework работал с нашей бд
 public class AppDatabase : DbContext
 {
     /// <summary>
-    /// Конструктор, в который ASP.NET Core сам передаст настройки подключения к базе данных
+    /// Инициализирует новый экземпляр <see cref="AppDatabase"/>.
     /// </summary>
-    /// <param name="options">Опции подключения к базе данных</param>
-    // настройки (например, что база PostgreSQL и где она лежит) задаются в Program.cs
-    // через base передаем их в DbContext
+    /// <param name="options">Опции подключения к базе данных.</param>
     public AppDatabase(DbContextOptions<AppDatabase> options) : base(options)
     {
     }
 
     /// <summary>
-    /// Таблица пользователей
+    /// Таблица пользователей.
     /// </summary>
-    // через  DbSet  добавляем и ищем наши классы, 
     public DbSet<User> Users => Set<User>();
 
     /// <summary>
-    /// Настройка связей между таблицами
+    /// Таблица распознанных показаний счётчиков.
     /// </summary>
-    /// <param name="modelBuilder">Построитель модели базы данных</param>
-    // этот метод Entity Framework вызывает сам, когда строит базу; override - значит мы дописываем свою настройку
+    public DbSet<Metering> Meterings => Set<Metering>();
+
+    /// <summary>
+    /// Настройка модели базы данных: связи, ограничения, индексы.
+    /// </summary>
+    /// <param name="modelBuilder">Построитель модели базы данных.</param>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // вызываем настройку Entity Framework
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<User>(entity =>
@@ -40,6 +39,12 @@ public class AppDatabase : DbContext
             // Уникальность Username — ключевое требование для аутентификации
             entity.HasIndex(u => u.Username)
                   .IsUnique();
+        });
+
+        modelBuilder.Entity<Metering>(entity =>
+        {
+            // TODO: добавить ограничение длины для MeterSerialNumber
+            // и индекс по MeterSerialNumber для быстрого поиска показаний по счётчику.
         });
     }
 }
