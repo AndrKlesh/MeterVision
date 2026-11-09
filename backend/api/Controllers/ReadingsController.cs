@@ -29,7 +29,7 @@ public class ReadingsController(IMediator mediator) : ControllerBase
     /// <param name="Id">Идентификатор записи.</param>
     /// <param name="SerialNumber">Серийный номер счётчика.</param>
     /// <param name="Value">Подтверждённое значение показания.</param>
-    public sealed record ConfirmReadingDto(int Id, string SerialNumber, double Value);
+    public sealed record ConfirmReadingDto(Guid Id, string SerialNumber, double Value);
 
     // <summary>
     /// DTO для неподтверждённой записи с фотографией в Base64.
@@ -38,7 +38,7 @@ public class ReadingsController(IMediator mediator) : ControllerBase
     /// <param name="SerialNumber">Серийный номер счётчика.</param>
     /// <param name="Value">Распознанное значение показания.</param>
     /// <param name="PhotoBase64">Фотография счётчика, закодированная в Base64.</param>    
-    public sealed record UnconfirmedDataDto(int Id, string SerialNumber, double Value, string PhotoBase64);
+    public sealed record UnconfirmedDataDto(Guid Id, string SerialNumber, double Value, string PhotoBase64);
 
     /// <summary>
     /// Отправить фотографию счётчика на распознавание.
