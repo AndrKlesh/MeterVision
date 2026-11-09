@@ -1,13 +1,17 @@
 using Mediator;
+using MeterVision.Api.Application.Abstractions.Services;
 
 namespace MeterVision.Api.Application.Commands.Recognition;
 
-public sealed class ConfirmHandler : IRequestHandler<ConfirmCommand, ConfirmResponse>
+public sealed class ConfirmHandler(
+    IMeteringService _meteringService
+    ) : IRequestHandler<ConfirmCommand, ConfirmResponse>
 {
-    public ValueTask<ConfirmResponse> Handle(
+    public async ValueTask<ConfirmResponse> Handle(
         ConfirmCommand request,
         CancellationToken cancellationToken)
     {
-        return ValueTask.FromResult(new ConfirmResponse(request.Id));
+        var metering = await _meteringService.Confirm(request.Id, request.Value, cancellationToken);
+        return new ConfirmResponse(metering.Id);
     }
 }

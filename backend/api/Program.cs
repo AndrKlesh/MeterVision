@@ -5,8 +5,9 @@ using FluentValidation;
 using MeterVision.Api.Application.Abstractions.Services;
 using MeterVision.Api.Infrastructure.Services;
 using MeterVision.Api.Infrastructure.Database;
-using MeterVision.Api.Application.Abstractions.Repositories;
 using MeterVision.Api.Infrastructure.Repositories;
+using MeterVision.Api.Application.Abstractions.Repositories;
+using MeterVision.Api.Infrastructure.Persistence.Repositories;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,6 +38,11 @@ builder.Services.AddDbContext<AppDatabase>(options =>
     options.UseInMemoryDatabase("MeterVisionDb")
 );
 
+
+builder.Services.AddScoped<IImageService, ImageService>();
+
+builder.Services.AddScoped<IMeteringRepository, MeteringRepository>();
+builder.Services.AddScoped<IMeteringService, MeteringService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICvService, CvServiceStub>();

@@ -1,5 +1,5 @@
 using MeterVision.Api.Domain.Entities.Auth;
-using MeterVision.Api.Application.Abstractions.Repositories.Exceptions;
+using MeterVision.Api.Application.Abstractions.Exceptions;
 
 namespace MeterVision.Api.Application.Abstractions.Repositories;
 

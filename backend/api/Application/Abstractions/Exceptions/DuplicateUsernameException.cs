@@ -1,4 +1,6 @@
-namespace MeterVision.Api.Application.Abstractions.Repositories.Exceptions;
+using MeterVision.Api.Application.Abstractions.Repositories;
+
+namespace MeterVision.Api.Application.Abstractions.Exceptions;
 
 /// <summary>
 /// Исключение, сигнализирующее о нарушении уникальности имени пользователя.

@@ -1,5 +1,7 @@
+using System.Text;
 using Mediator;
 using MeterVision.Api.Application.Commands.Recognition;
+using MeterVision.Api.Application.Queries.Reading;
 using MeterVision.Api.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -98,7 +100,19 @@ public class ReadingsController(IMediator mediator) : ControllerBase
     [HttpGet("unconfirmed")]
     public async Task<IActionResult> GetLastUnconfirmedValue()
     {
-        throw new NotImplementedException();
+        var header = Request.Headers["Authorization"].ToString();
+        var decoded = Encoding.UTF8.GetString(
+        Convert.FromBase64String(header.Substring(6)));
+        var parts = decoded.Split(':');
+        var username = parts[0];
+
+        var query = new GetLastUnconfirmedValueQuery(username);
+        var response = await _mediator.Send(query);
+
+        return Ok(new UnconfirmedDataDto(response.Id,
+                                         response.SerialNumber,
+                                         response.Value,
+                                         Convert.ToBase64String(response.ImageContent)));
     }
 
     // TODO: Сделать остальные методы. Пока реализованы заглушки.
