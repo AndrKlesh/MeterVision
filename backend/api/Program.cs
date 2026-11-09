@@ -45,7 +45,7 @@ builder.Services.AddScoped<IMeteringRepository, MeteringRepository>();
 builder.Services.AddScoped<IMeteringService, MeteringService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<ICvService, CvServiceStub>();
+builder.Services.AddScoped<ICvService, CvService>();
 
 var app = builder.Build();
 
