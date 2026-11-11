@@ -1,22 +1,125 @@
+import 'package:meter_vision_app/core/theme/app_sizes.dart';
 import 'package:flutter/material.dart';
+import 'package:meter_vision_app/core/theme/app_colors.dart';
 
 ThemeData get appTheme {
   return ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
-      );
-  }
+    colorScheme: .fromSeed(seedColor: AppColors.seed),
+    scaffoldBackgroundColor: AppColors.errorBackground,
+    appBarTheme: AppBarThemeData(backgroundColor: AppColors.errorBackground),
+    filledButtonTheme: FilledButtonThemeData(
+      style: ButtonStyle(
+        backgroundColor: WidgetStateProperty.fromMap(
+          <WidgetStatesConstraint, Color?>{
+            WidgetState.error: AppColors.validationError,
+            WidgetState.hovered & WidgetState.focused: AppColors.focusAccent,
+            WidgetState.focused: AppColors.primary,
+            WidgetState.disabled: AppColors.disabled,
+            WidgetState.any: AppColors.primary,
+          },
+        ),
+        foregroundColor: WidgetStateProperty.fromMap(
+          <WidgetStatesConstraint, Color?>{
+            WidgetState.error: AppColors.validationError,
+            WidgetState.hovered & WidgetState.focused: AppColors.focusAccent,
+            WidgetState.focused: AppColors.errorBackground,
+            WidgetState.disabled: AppColors.muted,
+            WidgetState.any: AppColors.errorBackground,
+          },
+        ),
+        shape: WidgetStateProperty.all(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSizes.radiusS),
+          ),
+        ),
+      ),
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: ButtonStyle(
+        foregroundColor: WidgetStateProperty.fromMap(
+          <WidgetStatesConstraint, Color?>{
+            WidgetState.error: AppColors.validationError,
+            WidgetState.hovered & WidgetState.focused: AppColors.focusAccent,
+            WidgetState.focused: AppColors.errorBackground,
+            WidgetState.disabled: AppColors.muted,
+            WidgetState.any: AppColors.primary,
+          },
+        ),
+        side: WidgetStateBorderSide.fromMap(
+          <WidgetStatesConstraint, BorderSide?>{
+            WidgetState.error: BorderSide(
+              color: AppColors.validationError,
+              width: AppSizes.thinStroke,
+            ),
+            WidgetState.hovered: BorderSide(
+              color: AppColors.validationError,
+              width: AppSizes.thinStroke,
+            ),
+            WidgetState.focused: BorderSide(
+              color: AppColors.focusBorder,
+              width: AppSizes.thinStroke,
+            ),
+            WidgetState.disabled: BorderSide(
+              color: AppColors.muted,
+              width: AppSizes.thinStroke,
+            ),
+            WidgetState.any: BorderSide(
+              color: AppColors.primary,
+              width: AppSizes.thinStroke,
+            ),
+          },
+        ),
+        shape: WidgetStateProperty.all(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSizes.radiusS),
+          ),
+        ),
+      ),
+    ),
+
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: AppColors.fieldFill,
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: AppSizes.paddingM,
+        vertical: AppSizes.paddingM,
+      ),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(AppSizes.radiusM),
+        borderSide: BorderSide.none,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(AppSizes.radiusM),
+        borderSide: BorderSide.none,
+      ),
+
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(AppSizes.radiusM),
+        borderSide: const BorderSide(
+          color: AppColors.primary,
+          width: AppSizes.fieldBorderWidth,
+        ),
+      ),
+
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(AppSizes.radiusM),
+        borderSide: const BorderSide(
+          color: AppColors.errorBorder,
+          width: AppSizes.fieldBorderWidth,
+        ),
+      ),
+
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(AppSizes.radiusM),
+        borderSide: const BorderSide(
+          color: AppColors.errorBorder,
+          width: AppSizes.fieldBorderWidth,
+        ),
+      ),
+
+      errorStyle: const TextStyle(fontSize: AppSizes.captionSize),
+
+      hintStyle: const TextStyle(color: AppColors.hint),
+    ),
+  );
+}

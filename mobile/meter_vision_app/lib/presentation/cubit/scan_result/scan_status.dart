@@ -1,0 +1,1 @@
+enum ScanStatus { initial, loading, success, error }
