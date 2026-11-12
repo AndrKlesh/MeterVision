@@ -1,5 +1,5 @@
 from typing import Protocol
-from app.schemas import MeterReading
+from app.schemas.meter_reading import MeterReading
 import numpy as np
 
 class OCREngine(Protocol):

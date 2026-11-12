@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 
 from app.abstractions.image_preprocessor import ImagePreprocessor
-from app.abstractions.ocr_engine import OcrEngine
+from app.abstractions.ocr_engine import OCREngine
 from app.dependencies import get_ocr_engine, get_preprocessor
 from app.schemas.meter_reading import MeterReading
 from app.services.recognition_service import RecognitionService
@@ -13,7 +13,7 @@ router = APIRouter(prefix="/api/v1", tags=["recognition"])
 async def recognize(
     file: UploadFile = File(...),
     preprocessor: ImagePreprocessor = Depends(get_preprocessor),
-    ocr_engine: OcrEngine = Depends(get_ocr_engine),
+    ocr_engine: OCREngine = Depends(get_ocr_engine),
 ) -> MeterReading:
     if file.content_type not in ("image/jpeg", "image/png"):
         raise HTTPException(status_code=400, detail="Only JPEG and PNG are supported.")

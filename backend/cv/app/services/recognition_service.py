@@ -1,7 +1,8 @@
-from app.abstractions.image_preprocessor import ImagePreprocessor
-from app.abstractions.ocr_engine import OcrEngine
-from app.schemas.meter_reading import MeterReading
+import re
 
+from app.abstractions.image_preprocessor import ImagePreprocessor
+from app.abstractions.ocr_engine import OCREngine
+from app.schemas.meter_reading import MeterReading
 
 class RecognitionService:
     """Оркестрация пайплайна: препроцессинг → OCR → постпроцессинг."""
@@ -9,22 +10,18 @@ class RecognitionService:
     def __init__(
         self,
         preprocessor: ImagePreprocessor,
-        ocr_engine: OcrEngine,
+        ocr_engine: OCREngine,
     ) -> None:
-        # Зависимости внедряются снаружи — легко подменить моками в тестах.
         self._preprocessor = preprocessor
         self._ocr = ocr_engine
 
     def recognize(self, image_bytes: bytes) -> MeterReading:
+        """
+        Распознаёт показания счётчика по фотографии.
+
+        :param image_bytes: сырые байты изображения (JPEG/PNG).
+        :return: распознанные показания.
+        :raises ValueError: если изображение не декодируется или текст не найден.
+        """
         processed = self._preprocessor.process(image_bytes)
-        texts = self._ocr.extract(processed)
-
-        if not texts:
-            raise ValueError("No text detected on the image.")
-
-        serial, value, confidence = self._parse(texts)
-        return MeterReading(
-            serial_number=serial,
-            reading_value=value,
-            confidence=confidence,
-        )
+        return self._ocr.extract(processed)
