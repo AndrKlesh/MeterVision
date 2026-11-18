@@ -13,7 +13,7 @@ class ScanResultCubit extends Cubit<ScanResultState> {
     : _id = result.id,
       super(
         ScanResultState(
-          measuresValue: result.reading,
+          measuresValue: result.value,
           serialNumber: result.serial,
         ),
       );
@@ -87,8 +87,8 @@ class ScanResultCubit extends Cubit<ScanResultState> {
     if (value.trim().length < 10) return AppStrings.shortSerial;
     return null;
   }
-  
+
   final ConfirmReadingUseCase _confirm;
-  final int _id;
+  final String _id;
   late String _serialDraft = state.serialNumber;
 }

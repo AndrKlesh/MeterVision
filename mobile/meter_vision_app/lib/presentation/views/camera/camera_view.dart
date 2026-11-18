@@ -2,7 +2,6 @@ import 'package:meter_vision_app/domain/usecase/scan_result/send_photo_usecase.d
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meter_vision_app/domain/repository/credentials_repository.dart';
 import 'package:meter_vision_app/presentation/views/login/login_view.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -198,7 +197,7 @@ class _CameraViewState extends State<CameraView> {
 
     setState(() => _uploading = true);
     try {
-      final result = await context.read<SendPhotoUseCase>()(path);
+      final result = await context.read<SendPhotoUseCase>().call(path);
       if (!mounted) return;
       final confirmed = await Navigator.of(context).push<bool>(
         MaterialPageRoute(

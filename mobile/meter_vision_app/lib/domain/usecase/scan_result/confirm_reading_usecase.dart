@@ -5,7 +5,7 @@ class ConfirmReadingUseCase {
 
   final IMeterService service;
 
-  Future<void> call(int id, String reading, String serial) async {
+  Future<void> call(String id, String reading, String serial) async {
     await service.confirm(
       id,
       reading,

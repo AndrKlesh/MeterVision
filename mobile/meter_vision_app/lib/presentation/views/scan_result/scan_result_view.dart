@@ -28,7 +28,7 @@ class ScanResultView extends StatefulWidget {
 }
 
 class _ScanResultViewState extends State<ScanResultView> {
-  late final measures = TextEditingController(text: widget.result.reading);
+  late final measures = TextEditingController(text: widget.result.value);
   late final serial = TextEditingController(text: widget.result.serial);
 
   @override
