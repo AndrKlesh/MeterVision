@@ -15,6 +15,7 @@ namespace MeterVision.Api.Application.Abstractions.Repositories;
 /// Исключения, которые может бросать реализация:
 /// <list type="bullet">
 ///   <item><see cref="UserNotFoundException"/> — пользователь не найден.</item>
+///   <item><see cref="IncorrectPasswordException"/> — неверный пароль.</item>
 ///   <item><see cref="DuplicateUsernameException"/> — нарушение уникальности имени.</item>
 /// </list>
 /// </para>
@@ -30,6 +31,9 @@ public interface IUserRepository
     /// <exception cref="UserNotFoundException">
     /// Пользователь с указанным идентификатором не существует.
     /// </exception>
+    /// <exception cref="IncorrectPasswordException">
+    /// Пользователь с указанным идентификатором существует, но пароль неверный.
+    /// </exception>
     /// <exception cref="InfrastructureException">
     /// Ошибка при обращении к хранилищу (например, БД недоступна).
     /// </exception>
@@ -43,6 +47,9 @@ public interface IUserRepository
     /// <returns>Найденный пользователь.</returns>
     /// <exception cref="UserNotFoundException">
     /// Пользователь с указанным именем не существует.
+    /// </exception>
+    /// <exception cref="IncorrectPasswordException">
+    /// Пользователь с указанным идентификатором существует, но пароль неверный.
     /// </exception>
     /// <remarks>
     /// Используется в сценарии аутентификации для проверки учётных данных.

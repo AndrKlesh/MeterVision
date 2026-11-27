@@ -1,5 +1,6 @@
 using MeterVision.Api.Application.Abstractions.Repositories;
 using MeterVision.Api.Application.Abstractions.Services;
+using MeterVision.Api.Application.Abstractions.Exceptions;
 
 namespace MeterVision.Api.Infrastructure.Services;
 
@@ -17,13 +18,12 @@ public class AuthService(IUserRepository _userRepository, ILogger<AuthService> _
                 return fakeToken;
             }
         }
-        catch (System.Exception ex)
+        catch (UserNotFoundException ex)
         {
             _logger.LogError(ex, "Сбой аутентификации пользователя User=[{username}:{password}]", Username, Password);
+            throw;
         }
-
-
-        return "Invalid login or password";
+        throw new IncorrectPasswordException("Неверный пароль или пользователь не найден.");
     }
 
     public Task LogoutAsync(string token)

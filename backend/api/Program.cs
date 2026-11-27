@@ -67,4 +67,21 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 
+
+/// TODO: Удалить перед релизом или после реализации регистрации.
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDatabase>();
+    if (!db.Users.Any(u => u.Username == "testuser@test.ru"))
+    {
+        db.Users.Add(new MeterVision.Api.Infrastructure.Database.Models.User
+        {
+            Id = Guid.NewGuid(),
+            Username = "testuser@test.ru",
+            PasswordHash = "testpass"
+        });
+        db.SaveChanges();
+    }
+}
+
 app.Run();
